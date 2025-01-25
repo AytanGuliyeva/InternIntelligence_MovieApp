@@ -18,16 +18,48 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
-        NavigationUI.setupWithNavController(binding.bottomNav,navController)
+        NavigationUI.setupWithNavController(binding.bottomNav, navController)
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.homeFragment || destination.id == R.id.searchFragment || destination.id == R.id.savedFragment || destination.id == R.id.downloadsFragment || destination.id == R.id.meFragment ){
+            if (destination.id == R.id.homeFragment || destination.id == R.id.searchFragment || destination.id == R.id.savedFragment || destination.id == R.id.downloadsFragment || destination.id == R.id.meFragment) {
                 showBottomNavigationView()
-            }else{
+            } else {
                 hideBottomNavigationView()
             }
         }
+
+        binding.bottomNav.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.homeFragment -> {
+                    navController.popBackStack(R.id.homeFragment, false)
+                    true
+                }
+
+                R.id.searchFragment -> {
+                    navController.popBackStack(R.id.searchFragment, false)
+                    navController.navigate(R.id.searchFragment)
+                    true
+                }
+
+                R.id.savedFragment -> {
+                    navController.popBackStack(R.id.savedFragment, false)
+                    navController.navigate(R.id.savedFragment)
+                    true
+                }
+
+                R.id.downloadsFragment -> {
+                    navController.popBackStack(R.id.downloadsFragment, false)
+                    navController.navigate(R.id.downloadsFragment)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+
     }
 
     fun hideBottomNavigationView() {
