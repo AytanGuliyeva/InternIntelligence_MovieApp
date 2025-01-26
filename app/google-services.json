@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "107877821213",
+    "project_id": "internintelligence-movieapp",
+    "storage_bucket": "internintelligence-movieapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107877821213:android:e3a44477de0b35b9f40ff4",
+        "android_client_info": {
+          "package_name": "com.example.internintelligence_movieapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOQky433ntTigyN5bURLu83UXBDJmcHA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

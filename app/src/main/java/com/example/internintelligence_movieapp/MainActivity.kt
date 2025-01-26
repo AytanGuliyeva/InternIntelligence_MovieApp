@@ -54,6 +54,11 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.downloadsFragment)
                     true
                 }
+                R.id.meFragment -> {
+                    navController.popBackStack(R.id.meFragment, false)
+                    navController.navigate(R.id.meFragment)
+                    true
+                }
 
                 else -> false
             }
