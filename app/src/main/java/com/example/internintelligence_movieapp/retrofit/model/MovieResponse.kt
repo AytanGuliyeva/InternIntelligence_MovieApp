@@ -4,9 +4,18 @@ data class MovieResponse(
     val results: List<Movie>
 )
 
-// Tek bir film modeli
 data class Movie(
     val title: String,
     val poster_path: String,
     val overview: String
 )
+
+data class GenreResponse(
+    val genres: List<Genre>
+)
+
+data class Genre(
+    val id: Int,
+    val name: String
+)
+
