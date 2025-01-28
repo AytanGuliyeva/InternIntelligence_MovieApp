@@ -66,7 +66,11 @@
         android:id="@+id/savedFragment"
         android:name="com.example.internintelligence_movieapp.ui.saved.SavedFragment"
         android:label="fragment_saved"
-        tools:layout="@layout/fragment_saved" />
+        tools:layout="@layout/fragment_saved" >
+        <action
+            android:id="@+id/action_savedFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/downloadsFragment"
         android:name="com.example.internintelligence_movieapp.ui.downloads.DownloadsFragment"
@@ -99,6 +103,11 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_searchFragment"
             app:destination="@id/searchFragment"
+            app:popUpTo="@id/movieDetailFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_movieDetailFragment_to_savedFragment"
+            app:destination="@id/savedFragment"
             app:popUpTo="@id/movieDetailFragment"
             app:popUpToInclusive="true" />
     </fragment>

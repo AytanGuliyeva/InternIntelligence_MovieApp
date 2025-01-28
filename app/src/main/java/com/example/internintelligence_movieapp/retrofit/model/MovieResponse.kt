@@ -10,7 +10,8 @@ data class Movie(
     val title: String,
     val overview: String,
     val poster_path: String?,
-    val release_date: String
+    val release_date: String,
+    val isSaved: Boolean = false
 )
 
 

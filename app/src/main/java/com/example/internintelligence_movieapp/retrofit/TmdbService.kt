@@ -56,5 +56,9 @@ interface TmdbService {
         @Query("api_key") apiKey: String
     ): Response<VideoResponse>
 
-
+    @GET("movie/{id}")
+    suspend fun getMovieById(
+        @Path("id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): Response<MovieResponse>
 }

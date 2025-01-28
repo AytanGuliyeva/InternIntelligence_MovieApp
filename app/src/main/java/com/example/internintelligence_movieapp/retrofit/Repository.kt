@@ -37,4 +37,7 @@ class Repository {
         return tmdbApi.getMovieVideos(movie_id,apiKey)
     }
 
+    suspend fun getMovieById(movie_id: Int, apiKey: String): Response<MovieResponse> {
+        return tmdbApi.getMovieById(movie_id,apiKey)
+    }
 }

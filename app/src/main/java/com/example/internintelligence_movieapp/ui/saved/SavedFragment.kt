@@ -1,60 +1,73 @@
 package com.example.internintelligence_movieapp.ui.saved
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.internintelligence_movieapp.R
+import com.example.internintelligence_movieapp.base.Resource
+import com.example.internintelligence_movieapp.databinding.FragmentSavedBinding
+import com.example.internintelligence_movieapp.ui.home.adapter.GenresMoviesAdapter
+import com.example.internintelligence_movieapp.ui.movieDetail.MovieDetailViewModel
+import com.example.internintelligence_movieapp.ui.saved.adapter.SavedAdapter
+import com.example.internintelligence_movieapp.ui.search.SearchFragmentDirections
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SavedFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SavedFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentSavedBinding
+    private lateinit var savedAdapter: SavedAdapter
+    val viewModel: SavedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_saved, container, false)
+        binding = FragmentSavedBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SavedFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SavedFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        savedAdapter = SavedAdapter { movie ->
+            movieDetail(movie.title)
+        }
+        binding.rvSaves.adapter = savedAdapter
+        binding.rvSaves.layoutManager = GridLayoutManager(context, 2)
+
+        viewModel.fetchSavedMovies()
+        Log.e("TAG", "onViewCreated: ${viewModel.fetchSavedMovies()}", )
+
+        viewModel.movieResult.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    // Yüklənir göstərgəsini aktivləşdirin
+                }
+                is Resource.Success -> {
+                    resource.data?.let { movies ->
+                        savedAdapter.submitList(movies)
+                        Log.e("TAG", "Adapter list: $movies")
+                    }
+                }
+                is Resource.Error -> {
+                    Log.e("SavedFragment", "Error: ${resource.exception?.message}")
                 }
             }
+        }
+
+
+    }
+
+    private fun movieDetail(movieTitle: String?) {
+        if (movieTitle != null) {
+            val action = SavedFragmentDirections.actionSavedFragmentToMovieDetailFragment(movieTitle)
+            findNavController().navigate(action)
+        } else {
+            Log.e("SavedFragment", "Movie title is null")
+        }
     }
 }
