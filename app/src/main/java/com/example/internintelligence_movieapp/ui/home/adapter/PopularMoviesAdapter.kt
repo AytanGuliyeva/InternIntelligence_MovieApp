@@ -1,5 +1,6 @@
 package com.example.internintelligence_movieapp.ui.home.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -10,7 +11,8 @@ import com.example.internintelligence_movieapp.databinding.ItemPopularMoviesBind
 import com.example.internintelligence_movieapp.retrofit.model.Movie
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
 
-class PopularMoviesAdapter:RecyclerView.Adapter<PopularMoviesAdapter.PopularMoviesViewHolder>() {
+class PopularMoviesAdapter(var itemClick: (item: Movie) -> Unit) :
+    RecyclerView.Adapter<PopularMoviesAdapter.PopularMoviesViewHolder>() {
 
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
@@ -48,12 +50,18 @@ class PopularMoviesAdapter:RecyclerView.Adapter<PopularMoviesAdapter.PopularMovi
         holder.bind(differ.currentList[position])
     }
 
-    inner class PopularMoviesViewHolder(private val binding:ItemPopularMoviesBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class PopularMoviesViewHolder(private val binding: ItemPopularMoviesBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(movies: Movie) {
             val baseUrl = "https://image.tmdb.org/t/p/w500"
             Glide.with(binding.imgMoviePoster.context)
                 .load("$baseUrl${movies.poster_path}")
                 .into(binding.imgMoviePoster)
+
+            itemView.setOnClickListener {
+                Log.d("Adapter", "Item clicked: ${movies.title}")
+                itemClick(movies)
+            }
         }
 
     }

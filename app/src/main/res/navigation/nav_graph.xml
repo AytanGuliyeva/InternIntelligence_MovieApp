@@ -48,12 +48,20 @@
         android:id="@+id/homeFragment"
         android:name="com.example.internintelligence_movieapp.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.internintelligence_movieapp.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/savedFragment"
         android:name="com.example.internintelligence_movieapp.ui.saved.SavedFragment"
@@ -75,4 +83,26 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.example.internintelligence_movieapp.ui.movieDetail.MovieDetailFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" >
+        <action
+            android:id="@+id/action_movieDetailFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/movieDetailFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_movieDetailFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/movieDetailFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <argument
+        android:name="title"
+        app:argType="string" />
 </navigation>

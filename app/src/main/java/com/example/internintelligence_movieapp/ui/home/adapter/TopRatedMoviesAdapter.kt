@@ -1,5 +1,6 @@
 package com.example.internintelligence_movieapp.ui.home.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -10,7 +11,7 @@ import com.example.internintelligence_movieapp.databinding.ItemPopularMoviesBind
 import com.example.internintelligence_movieapp.databinding.ItemTopMoviesBinding
 import com.example.internintelligence_movieapp.retrofit.model.Movie
 
-class TopRatedMoviesAdapter:RecyclerView.Adapter<TopRatedMoviesAdapter.TopRatedMoviesViewHolder>() {
+class TopRatedMoviesAdapter(var itemClick: (item: Movie) -> Unit):RecyclerView.Adapter<TopRatedMoviesAdapter.TopRatedMoviesViewHolder>() {
 
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
@@ -50,6 +51,10 @@ class TopRatedMoviesAdapter:RecyclerView.Adapter<TopRatedMoviesAdapter.TopRatedM
             Glide.with(binding.imgMoviePoster.context)
                 .load("$baseUrl${movies.poster_path}")
                 .into(binding.imgMoviePoster)
+            itemView.setOnClickListener {
+                Log.d("Adapter", "Item clicked: ${movies.title}")
+                itemClick(movies)
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.internintelligence_movieapp.retrofit
 
 import com.example.internintelligence_movieapp.retrofit.model.GenreResponse
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
+import com.example.internintelligence_movieapp.retrofit.model.VideoResponse
 import retrofit2.Response
 
 class Repository {
@@ -25,4 +26,15 @@ class Repository {
     suspend fun getGenres(apiKey: String): Response<GenreResponse> {
         return tmdbApi.getGenres(apiKey)
     }
+    suspend fun getMovies(apiKey: String): Response<MovieResponse> {
+        return tmdbApi.getMovies(apiKey)
+    }
+    suspend fun getSearch(apiKey: String, query: String): Response<MovieResponse> {
+        return tmdbApi.searchMovies(apiKey, query)
+    }
+
+    suspend fun getVideos(movie_id: Int ,apiKey: String): Response<VideoResponse> {
+        return tmdbApi.getMovieVideos(movie_id,apiKey)
+    }
+
 }

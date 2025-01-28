@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.internintelligence_movieapp.R
 import com.example.internintelligence_movieapp.databinding.FragmentHomeBinding
@@ -23,8 +24,7 @@ class HomeFragment : Fragment() {
     val viewModel: HomeViewModel by viewModels()
     private lateinit var popularAdapter: PopularMoviesAdapter
     private lateinit var topRatedAdapter: TopRatedMoviesAdapter
-    private lateinit var genresMoviesAdapter:GenresMoviesAdapter
-
+    private lateinit var genresMoviesAdapter: GenresMoviesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,15 +37,21 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val apiKey = "827c2738d945feb56a52ad0fc38dc665"
-        popularAdapter = PopularMoviesAdapter()
+        popularAdapter = PopularMoviesAdapter { movie ->
+            movieDetail(movie.title)
+        }
         binding.rvPopular.adapter = popularAdapter
         binding.rvPopular.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        topRatedAdapter = TopRatedMoviesAdapter()
+        topRatedAdapter = TopRatedMoviesAdapter { movie ->
+            movieDetail(movie.title)
+        }
         binding.rvLatest.adapter = topRatedAdapter
         binding.rvLatest.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        genresMoviesAdapter = GenresMoviesAdapter()
+        genresMoviesAdapter = GenresMoviesAdapter { movie ->
+            movieDetail(movie.title)
+        }
         binding.rvGenresMovies.adapter = genresMoviesAdapter
         binding.rvGenresMovies.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -76,7 +82,9 @@ class HomeFragment : Fragment() {
         viewModel.nowPlayingMoviesResult.observe(viewLifecycleOwner) { movieResponse ->
             movieResponse?.results?.let { movies ->
                 val limitedMovies = movies.take(5)
-                val adapter = MoviesImageAdapter(limitedMovies.map { it.poster_path }) {}
+                val adapter = MoviesImageAdapter(
+                    limitedMovies.mapNotNull { it.poster_path }
+                ) {}
                 binding.viewPager.adapter = adapter
                 val dotsIndicator = binding.dotsIndicator
                 dotsIndicator.setViewPager2(binding.viewPager)
@@ -120,6 +128,16 @@ class HomeFragment : Fragment() {
 
 
     }
+
+    private fun movieDetail(movieTitle: String?) {
+        if (movieTitle != null) {
+            val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(movieTitle)
+            findNavController().navigate(action)
+        } else {
+            Log.e("HomeFragment", "Movie title is null")
+        }
+    }
+
 }
 
 

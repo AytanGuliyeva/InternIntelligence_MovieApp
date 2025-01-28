@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -40,6 +41,9 @@ android {
 }
 
 dependencies {
+    //Swiperefreshlayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 
     // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

@@ -8,6 +8,7 @@
         android:id="@+id/imgMoviePoster"
         android:layout_width="100dp"
         android:layout_height="150dp"
+        android:layout_margin="35dp"
         android:background="@drawable/rounded_bottom_corners"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
