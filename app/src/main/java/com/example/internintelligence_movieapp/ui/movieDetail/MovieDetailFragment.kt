@@ -11,10 +11,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.internintelligence_movieapp.R
 import com.example.internintelligence_movieapp.databinding.FragmentMovieDetailBinding
 import com.example.internintelligence_movieapp.retrofit.model.Movie
+import com.example.internintelligence_movieapp.ui.home.adapter.PopularMoviesAdapter
+import com.example.internintelligence_movieapp.ui.movieDetail.adapter.ReviewsAdapter
 import com.example.internintelligence_movieapp.ui.search.SearchViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -27,6 +30,7 @@ class MovieDetailFragment : Fragment() {
     val viewModel: MovieDetailViewModel by viewModels()
     lateinit var auth: FirebaseAuth
     private var videoUrl: String? = null
+    private lateinit var reviewAdapter: ReviewsAdapter
 
 
     override fun onCreateView(
@@ -46,13 +50,32 @@ class MovieDetailFragment : Fragment() {
 
         viewModel.searchMovieByTitle(apiKey, args.title)
 
+        // viewModel.getReviews(args.movieId)
+        reviewAdapter = ReviewsAdapter()
+        binding.rvReviews.adapter = reviewAdapter
+        binding.rvReviews.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
         observeMovieDetails()
         observeTrailerUrl()
+        observeReviews()
 
         binding.iconBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
+
+    private fun observeReviews() {
+        viewModel.reviewDetails.observe(viewLifecycleOwner) { reviews ->
+            if (reviews != null && reviews.isNotEmpty()) {
+                reviewAdapter.submitList(reviews)
+                Log.e("TAGreview", "observeReviews: ${reviews} reviews loaded.")
+            } else {
+                Toast.makeText(requireContext(), "No reviews available.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun observeMovieDetails() {
         viewModel.movieDetails.observe(viewLifecycleOwner) { movie ->
@@ -80,13 +103,13 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun populateMovieDetails(movie: Movie) {
-        viewModel.checkSaveStatus(movie.id.toString(),binding.iconSave)
+        viewModel.checkSaveStatus(movie.id.toString(), binding.iconSave)
         binding.textTitle.text = movie.title
         binding.textDescription.text = movie.overview
         binding.textDescription2.text = movie.overview
         binding.textYear.text = movie.release_date
         binding.iconSave.setOnClickListener {
-            viewModel.toggleSaveStatus(movie.id.toString(),binding.iconSave)
+            viewModel.toggleSaveStatus(movie.id.toString(), binding.iconSave)
         }
         Glide.with(requireContext())
             .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
@@ -95,26 +118,26 @@ class MovieDetailFragment : Fragment() {
             .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
             .into(binding.imgTrailerPoster)
 
-/*
-        binding.buttonDownload.setOnClickListener {
-            if (videoUrl != null) {
-                viewModel.addVideoToFirestore(
-                    auth.currentUser!!.uid,
-                    movie.title,
-                    videoUrl!!,
-                    onSuccess = {
+        /*
+                binding.buttonDownload.setOnClickListener {
+                    if (videoUrl != null) {
+                        viewModel.addVideoToFirestore(
+                            auth.currentUser!!.uid,
+                            movie.title,
+                            videoUrl!!,
+                            onSuccess = {
 
-                        Toast.makeText(context, "Video added successfullt", Toast.LENGTH_SHORT).show()
-                    },
-                    onFailure = { errorMessage ->
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Video added successfullt", Toast.LENGTH_SHORT).show()
+                            },
+                            onFailure = { errorMessage ->
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    } else {
+                        Toast.makeText(context, "Video Url doesnt exist", Toast.LENGTH_SHORT).show()
                     }
-                )
-            } else {
-                Toast.makeText(context, "Video Url doesnt exist", Toast.LENGTH_SHORT).show()
-            }
-        }
-*/
+                }
+        */
     }
 
     private fun playTrailer(url: String) {

@@ -11,7 +11,8 @@ import com.example.internintelligence_movieapp.databinding.ItemGenresMoviesBindi
 import com.example.internintelligence_movieapp.databinding.ItemPopularMoviesBinding
 import com.example.internintelligence_movieapp.retrofit.model.Movie
 
-class GenresMoviesAdapter(var itemClick: (item: Movie) -> Unit):RecyclerView.Adapter<GenresMoviesAdapter.GenresMoviesViewHolder>(){
+class GenresMoviesAdapter(var itemClick: (item: Movie) -> Unit) :
+    RecyclerView.Adapter<GenresMoviesAdapter.GenresMoviesViewHolder>() {
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.title == newItem.title
@@ -34,7 +35,8 @@ class GenresMoviesAdapter(var itemClick: (item: Movie) -> Unit):RecyclerView.Ada
             parent,
             false
         )
-        return GenresMoviesViewHolder(binding)    }
+        return GenresMoviesViewHolder(binding)
+    }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
@@ -43,7 +45,9 @@ class GenresMoviesAdapter(var itemClick: (item: Movie) -> Unit):RecyclerView.Ada
     override fun onBindViewHolder(holder: GenresMoviesViewHolder, position: Int) {
         holder.bind(differ.currentList[position])
     }
-    inner class GenresMoviesViewHolder(private val binding: ItemGenresMoviesBinding):RecyclerView.ViewHolder(binding.root){
+
+    inner class GenresMoviesViewHolder(private val binding: ItemGenresMoviesBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(movies: Movie) {
             val baseUrl = "https://image.tmdb.org/t/p/w500"
             Glide.with(binding.imgMoviePoster.context)

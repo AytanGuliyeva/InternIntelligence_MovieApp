@@ -2,6 +2,7 @@ package com.example.internintelligence_movieapp.retrofit
 
 import com.example.internintelligence_movieapp.retrofit.model.GenreResponse
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
+import com.example.internintelligence_movieapp.retrofit.model.ReviewResponse
 import com.example.internintelligence_movieapp.retrofit.model.VideoResponse
 import retrofit2.Response
 
@@ -39,5 +40,8 @@ class Repository {
 
     suspend fun getMovieById(movie_id: Int, apiKey: String): Response<MovieResponse> {
         return tmdbApi.getMovieById(movie_id,apiKey)
+    }
+    suspend fun getReviews(movie_id: Int, apiKey: String): Response<ReviewResponse> {
+        return tmdbApi.getMovieReviews(movie_id,apiKey)
     }
 }

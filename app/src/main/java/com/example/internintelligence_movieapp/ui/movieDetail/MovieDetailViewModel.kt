@@ -10,6 +10,8 @@ import com.example.internintelligence_movieapp.R
 import com.example.internintelligence_movieapp.retrofit.Repository
 import com.example.internintelligence_movieapp.retrofit.model.Movie
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
+import com.example.internintelligence_movieapp.retrofit.model.Review
+import com.example.internintelligence_movieapp.retrofit.model.ReviewResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +32,9 @@ class MovieDetailViewModel : ViewModel() {
     val trailerUrl: LiveData<String?>
         get() = _trailerUrl
 
+    private val _reviewDetails = MutableLiveData<List<Review>?>()
+    val reviewDetails: LiveData<List<Review>?>
+        get() = _reviewDetails
 
     //save
     fun addSaveToFirebase(postId: String) {
@@ -104,6 +109,7 @@ class MovieDetailViewModel : ViewModel() {
                         _movieDetails.postValue(movies.first())
                         val movieId = movies.first().id
                         getMovieTrailer(apiKey, movieId)
+                        getReviews(apiKey,movieId)
                     } else {
                         Log.e("Search", "No movies found for title: $title")
                     }
@@ -135,38 +141,54 @@ class MovieDetailViewModel : ViewModel() {
     }
 
 
-/*
-    fun addVideoToFirestore(userId: String, title: String, url: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        val userDoc = firebaseFirestore.collection("downloads").document(userId)
-
-        val video = mapOf(
-            "title" to title,
-            "url" to url
-        )
-
-        userDoc.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                val currentVideos = document.get("videos") as? ArrayList<Map<String, String>> ?: arrayListOf()
-                currentVideos.add(video)
-                userDoc.update("videos", currentVideos)
-                    .addOnSuccessListener {
-                        onSuccess()
-                    }
-                    .addOnFailureListener { e ->
-                        onFailure("Videoyu yeniləmək mümkün olmadı: ${e.message}")
-                    }
+    private suspend fun getReviews(apiKey: String, movieId: Int) {
+        try {
+            val response = repository.getReviews(movieId, apiKey)
+            if (response.isSuccessful) {
+                val reviews = response.body()?.results
+                _reviewDetails.postValue(reviews ?: emptyList())
             } else {
-                userDoc.set(mapOf("videos" to listOf(video)))
-                    .addOnSuccessListener {
-                        onSuccess()
-                    }
-                    .addOnFailureListener { e ->
-                        onFailure("Videonu əlavə etmək mümkün olmadı: ${e.message}")
-                    }
+                Log.e("Reviews", "API response error: ${response.errorBody()?.string()}")
             }
-        }.addOnFailureListener { e ->
-            onFailure("Firestore-dən sənəd oxunmadı: ${e.message}")
+        } catch (e: Exception) {
+            Log.e("Reviews", "Error getting reviews: $e")
         }
     }
-*/
+
+
+
+    /*
+        fun addVideoToFirestore(userId: String, title: String, url: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+            val userDoc = firebaseFirestore.collection("downloads").document(userId)
+
+            val video = mapOf(
+                "title" to title,
+                "url" to url
+            )
+
+            userDoc.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val currentVideos = document.get("videos") as? ArrayList<Map<String, String>> ?: arrayListOf()
+                    currentVideos.add(video)
+                    userDoc.update("videos", currentVideos)
+                        .addOnSuccessListener {
+                            onSuccess()
+                        }
+                        .addOnFailureListener { e ->
+                            onFailure("Videoyu yeniləmək mümkün olmadı: ${e.message}")
+                        }
+                } else {
+                    userDoc.set(mapOf("videos" to listOf(video)))
+                        .addOnSuccessListener {
+                            onSuccess()
+                        }
+                        .addOnFailureListener { e ->
+                            onFailure("Videonu əlavə etmək mümkün olmadı: ${e.message}")
+                        }
+                }
+            }.addOnFailureListener { e ->
+                onFailure("Firestore-dən sənəd oxunmadı: ${e.message}")
+            }
+        }
+    */
 }

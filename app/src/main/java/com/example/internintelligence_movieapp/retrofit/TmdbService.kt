@@ -2,6 +2,7 @@ package com.example.internintelligence_movieapp.retrofit
 
 import com.example.internintelligence_movieapp.retrofit.model.GenreResponse
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
+import com.example.internintelligence_movieapp.retrofit.model.ReviewResponse
 import com.example.internintelligence_movieapp.retrofit.model.VideoResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -61,4 +62,9 @@ interface TmdbService {
         @Path("id") movieId: Int,
         @Query("api_key") apiKey: String
     ): Response<MovieResponse>
+    @GET("movie/{movie_id}/reviews")
+    suspend fun getMovieReviews(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): Response<ReviewResponse>
 }

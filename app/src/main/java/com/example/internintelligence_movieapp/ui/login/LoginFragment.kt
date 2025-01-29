@@ -15,14 +15,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LoginFragment : Fragment() {
-   private lateinit var binding: FragmentLoginBinding
+    private lateinit var binding: FragmentLoginBinding
     lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater,container,false)
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,14 +32,6 @@ class LoginFragment : Fragment() {
         checkLogin()
         btnLogin()
         initNavigationListeners()
-   //     binding.buttonLogin.setOnClickListener {
-//            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-//
-//        }
-//        binding.textCreateAccount.setOnClickListener {
-//            findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
-//
- //       }
     }
 
 
@@ -48,15 +40,15 @@ class LoginFragment : Fragment() {
             val email = binding.editEmail.text.toString()
             val password = binding.editPassword.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
-              //  binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
                 auth.signInWithEmailAndPassword(
                     email, password
                 ).addOnSuccessListener {
-                  //  binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
 
                 }.addOnFailureListener {
-                 //   binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             } else {

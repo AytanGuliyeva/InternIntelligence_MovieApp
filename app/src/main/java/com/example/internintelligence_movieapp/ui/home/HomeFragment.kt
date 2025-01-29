@@ -37,29 +37,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val apiKey = "827c2738d945feb56a52ad0fc38dc665"
-        popularAdapter = PopularMoviesAdapter { movie ->
-            movieDetail(movie.title)
-        }
-        binding.rvPopular.adapter = popularAdapter
-        binding.rvPopular.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        topRatedAdapter = TopRatedMoviesAdapter { movie ->
-            movieDetail(movie.title)
-        }
-        binding.rvLatest.adapter = topRatedAdapter
-        binding.rvLatest.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        genresMoviesAdapter = GenresMoviesAdapter { movie ->
-            movieDetail(movie.title)
-        }
-        binding.rvGenresMovies.adapter = genresMoviesAdapter
-        binding.rvGenresMovies.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        viewModel.getPopularMovies(apiKey)
-        viewModel.getTopRatedMovies(apiKey)
-        viewModel.getNowPlayingMovies(apiKey)
-        viewModel.getGenres(apiKey)
+        setupRecyclerViewAdapters()
+        fetchMovies(apiKey)
 
 
 
@@ -127,6 +106,31 @@ class HomeFragment : Fragment() {
         }
 
 
+    }
+
+    private fun setupRecyclerViewAdapters() {
+        popularAdapter = PopularMoviesAdapter { movie -> movieDetail(movie.title) }
+        binding.rvPopular.adapter = popularAdapter
+        binding.rvPopular.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        topRatedAdapter = TopRatedMoviesAdapter { movie -> movieDetail(movie.title) }
+        binding.rvLatest.adapter = topRatedAdapter
+        binding.rvLatest.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        genresMoviesAdapter = GenresMoviesAdapter { movie -> movieDetail(movie.title) }
+        binding.rvGenresMovies.adapter = genresMoviesAdapter
+        binding.rvGenresMovies.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    }
+
+
+    private fun fetchMovies(apiKey: String) {
+        viewModel.getPopularMovies(apiKey)
+        viewModel.getTopRatedMovies(apiKey)
+        viewModel.getNowPlayingMovies(apiKey)
+        viewModel.getGenres(apiKey)
     }
 
     private fun movieDetail(movieTitle: String?) {

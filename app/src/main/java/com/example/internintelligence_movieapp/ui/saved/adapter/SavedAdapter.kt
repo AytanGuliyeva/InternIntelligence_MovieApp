@@ -7,24 +7,27 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.internintelligence_movieapp.databinding.ItemGenresMoviesBinding
 import com.example.internintelligence_movieapp.databinding.ItemSavedBinding
 import com.example.internintelligence_movieapp.retrofit.model.Movie
 
-class SavedAdapter(var itemClick: (item: Movie) -> Unit): RecyclerView.Adapter<SavedAdapter.SavedViewHolder>(){
+class SavedAdapter(var itemClick: (item: Movie) -> Unit): RecyclerView.Adapter<SavedAdapter.SavedViewHolder>() {
 
+    // DiffUtil Callback
     private val diffUtilCallBack = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.title == newItem.title
+            // Filmlərin unikal ID-lərinə əsaslanın
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+            // Filmlərin bütün məlumatlarını müqayisə edin
             return oldItem == newItem
         }
     }
 
     private val differ = AsyncListDiffer(this, diffUtilCallBack)
 
+    // Adapterə yeni məlumatları göndərmək üçün
     fun submitList(movieList: List<Movie>) {
         differ.submitList(movieList)
     }
@@ -35,7 +38,8 @@ class SavedAdapter(var itemClick: (item: Movie) -> Unit): RecyclerView.Adapter<S
             parent,
             false
         )
-        return SavedViewHolder(binding)     }
+        return SavedViewHolder(binding)
+    }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
@@ -44,15 +48,17 @@ class SavedAdapter(var itemClick: (item: Movie) -> Unit): RecyclerView.Adapter<S
     override fun onBindViewHolder(holder: SavedViewHolder, position: Int) {
         holder.bind(differ.currentList[position])
     }
-    inner class SavedViewHolder(private val binding:ItemSavedBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(movies: Movie) {
-            val baseUrl = "https://image.tmdb.org/t/p/w500"
+
+    inner class SavedViewHolder(private val binding: ItemSavedBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(movie: Movie) {
+            val baseUrl = "https://image.tmdb.org/t/p/w500"  // TMDB şəkil URL formatı
             Glide.with(binding.imgMoviePoster.context)
-                .load("$baseUrl${movies.poster_path}")
+                .load("$baseUrl${movie.poster_path}")
                 .into(binding.imgMoviePoster)
+
+            // Filmə klikləmə hadisəsi
             itemView.setOnClickListener {
-                Log.d("Adapter", "Item clicked: ${movies.title}")
-                itemClick(movies)
+                itemClick(movie)
             }
         }
     }

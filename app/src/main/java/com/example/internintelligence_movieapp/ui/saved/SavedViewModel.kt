@@ -19,88 +19,96 @@ class SavedViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    private val _savedPosts = MutableLiveData<Resource<List<String>>>()
-    val savedPosts: LiveData<Resource<List<String>>> = _savedPosts
-
     private val _movieResult = MutableLiveData<Resource<List<Movie>>>()
     val movieResult: LiveData<Resource<List<Movie>>> = _movieResult
 
-
-
-    init {
-        fetchSavedMovies()
-    }
-
-    fun fetchSavedMovies() {
-        _savedPosts.value = Resource.Loading
-
+    fun fetchSavedMovies(apikey: String) {
+        _movieResult.value = Resource.Loading
         firestore.collection("Saves").document(auth.currentUser!!.uid).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val savedPostIds = document.data?.keys ?: emptySet<String>()
-                    savedPostIds.forEach { id ->
-                        //etchMoviesByIds("827c2738d945feb56a52ad0fc38dc665",id.toInt())
-                        Log.e("TAGmoviesview", "fetchSavedMovies:$savedPostIds")
-                        //fetchMoviesByIds(savedPostIds)
-                    } }
-                else {
-                        _savedPosts.value = Resource.Success(emptyList())
+                    val savedPostIds = document.data?.keys?.map { it.toInt() } ?: emptyList()
+                    if (savedPostIds.isNotEmpty()) {
+                        Log.e("TAGsaved", "fetchMoviesByIds: $savedPostIds", )
+
+                        fetchMoviesByIds(apikey, savedPostIds)
+                    } else {
                         _movieResult.value = Resource.Success(emptyList())
                     }
+                } else {
+                    _movieResult.value = Resource.Success(emptyList())
                 }
-                    .addOnFailureListener { exception ->
-                        _savedPosts.value = Resource.Error(exception)
-                        _movieResult.value = Resource.Error(exception)
-                    }
             }
-
-    /*fun fetchMoviesByIds(apikey:String,movieId:Int){
-            viewModelScope.launch {
+            .addOnFailureListener { exception ->
+                _movieResult.value = Resource.Error(exception)
+            }
+    }
+    private fun fetchMoviesByIds(apikey: String, movieIds: List<Int>) {
+        val movies = mutableListOf<Movie>()
+        val coroutineScope = CoroutineScope(Dispatchers.IO)
+        coroutineScope.launch {
+            val results = movieIds.mapNotNull { movieId ->
                 try {
-                    val response = repository.getMovieById(movieId,apikey)
+                    val response = repository.getMovieById(movieId, apikey)
+                    Log.e("TAGsaved1", "API Response: ${response.body()}")
+
+                    Log.e("TAGsavedm", "fetchMoviesByIds: $movieId")
+
                     if (response.isSuccessful) {
-                        _movieResult.postValue(response.body())
-                        Log.d("HomeViewModel", "Fetched popular movies: ${response.body()}")
+                        Log.e("TAGsaved2", "API Response: ${response.body()}")
+
+                        val movie = response.body()?.results?.firstOrNull()
+                        if (movie != null) {
+                            Log.e("TAGsaved", "Fetched movie: ${movie.title}")
+                        } else {
+                            Log.e("TAGsaved", "No movie found for ID: $movieId")
+                        }
+                        movie
                     } else {
-                        Log.e("HomeViewModel", "Error: ${response.code()}")
+                        Log.e("TAGsavedm", "Error fetching movie with ID $movieId: ${response.code()}")
+                        null
                     }
                 } catch (e: Exception) {
-                    Log.e("HomeViewModel", "Exception: ${e.message}")
-                    _movieResult.postValue(null)
-                }
-
-        }
-
-    }*/
-
-    /*private fun fetchMoviesByIds(savedPostIds: Set<String>) {
-        val apiKey = "827c2738d945feb56a52ad0fc38dc665"
-        val movieList = mutableListOf<Movie>()
-
-        savedPostIds.forEach { movieId ->
-            val id = movieId.toIntOrNull()  // Ensure the ID is valid
-            if (id != null) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        val response = repository.getMovieById(id, apiKey)
-                        if (response.isSuccessful) {
-                            Log.e("TAGmovie", "fetchMoviesByIds: $response", )
-                            response.body()?.let { movieResponse ->
-                                // `MovieResponse` içindən `results`-u alın
-                                movieList.addAll(movieResponse.results)
-                                Log.e("TAGmovie2", "fetchMoviesByIds: $movieList", )
-                            }
-                        } else {
-                            Log.e("TMDB Error", "Failed to fetch movie with ID: $movieId")
-                        }
-                    } catch (e: Exception) {
-                        Log.e("TMDB Error", "Error fetching movie data", e)
-                    }
+                    Log.e("SavedViewModel", "Error fetching movie with ID $movieId: ${e.message}")
+                    null
                 }
             }
-        }
+            movies.addAll(results)
 
-        // Update the movieResult LiveData with fetched movie data
-        _movieResult.postValue(Resource.Success(movieList))
-    }*/
+            if (movies.isEmpty()) {
+                Log.e("TAGsaved", "No movies found for IDs: $movieIds")
+            } else {
+                Log.e("TAGsaved", "Movies fetched: ${movies.size}")
+            }
+
+            _movieResult.postValue(Resource.Success(movies))
+        }
+    }
+
+
+    /*
+        private fun fetchMoviesByIds(apikey: String, movieIds: List<Int>) {
+            val movies = mutableListOf<Movie>()
+            val coroutineScope = CoroutineScope(Dispatchers.IO)
+            coroutineScope.launch {
+                movieIds.forEach { movieId ->
+                    try {
+                        val response = repository.getMovieById(movieId, apikey)
+                        Log.e("TAGsavedm", "fetchMoviesByIds: $movieId", )
+
+                        if (response.isSuccessful) {
+                            response.body()?.results?.let {
+
+                                movies.addAll(it)
+                                Log.e("TAGsavedm", "fetchMoviesByIds: $movies", )
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("SavedViewModel", "Error fetching movie: ${e.message}")
+                    }
+                }
+                _movieResult.postValue(Resource.Success(movies))
+            }
+        }
+    */
 }

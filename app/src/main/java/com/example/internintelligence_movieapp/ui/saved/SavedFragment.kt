@@ -39,26 +39,28 @@ class SavedFragment : Fragment() {
         binding.rvSaves.adapter = savedAdapter
         binding.rvSaves.layoutManager = GridLayoutManager(context, 2)
 
-        viewModel.fetchSavedMovies()
-        Log.e("TAG", "onViewCreated: ${viewModel.fetchSavedMovies()}", )
+        val apiKey = "827c2738d945feb56a52ad0fc38dc665"
+        viewModel.fetchSavedMovies(apiKey)
 
         viewModel.movieResult.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> {
-                    // Yüklənir göstərgəsini aktivləşdirin
                 }
                 is Resource.Success -> {
                     resource.data?.let { movies ->
-                        savedAdapter.submitList(movies)
-                        Log.e("TAG", "Adapter list: $movies")
+                        if (movies.isNotEmpty()) {
+                            savedAdapter.submitList(movies)
+                            Log.e("TAG", "Adapter list: $movies")
+                        } else {
+                        }
                     }
                 }
                 is Resource.Error -> {
+                    // Error handling
                     Log.e("SavedFragment", "Error: ${resource.exception?.message}")
                 }
             }
         }
-
 
     }
 

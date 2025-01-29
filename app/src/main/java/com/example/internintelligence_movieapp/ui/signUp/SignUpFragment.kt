@@ -67,16 +67,16 @@ class SignUpFragment : Fragment() {
         viewModel.userCreated.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Loading -> {
-                    //   binding.progressBar.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.VISIBLE
                 }
 
                 is Resource.Success -> {
-                    // binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     findNavController().navigate(R.id.loginFragment)
                 }
 
                 is Resource.Error -> {
-                    //binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     handleSignUpFailure(resource.exception)
                 }
             }
