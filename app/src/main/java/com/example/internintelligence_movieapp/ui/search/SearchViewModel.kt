@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.internintelligence_movieapp.retrofit.Repository
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
 class SearchViewModel:ViewModel() {
     private val repository = Repository()
 

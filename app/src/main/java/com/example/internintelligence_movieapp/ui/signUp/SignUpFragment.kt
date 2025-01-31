@@ -13,7 +13,9 @@ import com.example.internintelligence_movieapp.R
 import com.example.internintelligence_movieapp.base.Resource
 import com.example.internintelligence_movieapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     val viewModel: SignUpViewModel by viewModels()

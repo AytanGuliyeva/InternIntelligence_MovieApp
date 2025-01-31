@@ -22,12 +22,20 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MeFragment : Fragment() {
     private lateinit var binding: FragmentMeBinding
     val viewModel:MeViewModel by viewModels()
+//    lateinit var auth: FirebaseAuth
+//    lateinit var firestore: FirebaseFirestore
+
+    @Inject
     lateinit var auth: FirebaseAuth
+
+    @Inject
     lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(

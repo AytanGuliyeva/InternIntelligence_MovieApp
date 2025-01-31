@@ -9,10 +9,16 @@ import com.example.internintelligence_movieapp.data.Users
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MeViewModel : ViewModel() {
-    private var firestore = FirebaseFirestore.getInstance()
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+@HiltViewModel
+class MeViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
+    val auth: FirebaseAuth
+) : ViewModel() {
+    // private var firestore = FirebaseFirestore.getInstance()
+    //private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _userInformation = MutableLiveData<Resource<Users>>()
     val userInformation: LiveData<Resource<Users>>

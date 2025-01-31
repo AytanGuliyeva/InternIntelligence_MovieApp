@@ -16,8 +16,8 @@ import com.example.internintelligence_movieapp.retrofit.model.GenreResponse
 import com.example.internintelligence_movieapp.retrofit.model.MovieResponse
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
 class HomeViewModel : ViewModel() {
 
     private val repository = Repository()

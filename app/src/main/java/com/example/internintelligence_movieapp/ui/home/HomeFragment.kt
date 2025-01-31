@@ -18,7 +18,9 @@ import com.example.internintelligence_movieapp.ui.home.adapter.PopularMoviesAdap
 import com.example.internintelligence_movieapp.ui.home.adapter.TopRatedMoviesAdapter
 import com.example.internintelligence_movieapp.ui.me.MeViewModel
 import com.google.android.material.chip.Chip
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     val viewModel: HomeViewModel by viewModels()

@@ -16,7 +16,9 @@ import com.example.internintelligence_movieapp.ui.home.adapter.GenresMoviesAdapt
 import com.example.internintelligence_movieapp.ui.movieDetail.MovieDetailViewModel
 import com.example.internintelligence_movieapp.ui.saved.adapter.SavedAdapter
 import com.example.internintelligence_movieapp.ui.search.SearchFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SavedFragment : Fragment() {
     private lateinit var binding: FragmentSavedBinding
     private lateinit var savedAdapter: SavedAdapter

@@ -16,8 +16,9 @@ import com.example.internintelligence_movieapp.databinding.FragmentSearchBinding
 import com.example.internintelligence_movieapp.ui.home.HomeFragmentDirections
 import com.example.internintelligence_movieapp.ui.home.HomeViewModel
 import com.example.internintelligence_movieapp.ui.home.adapter.GenresMoviesAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var genresMoviesAdapter: GenresMoviesAdapter

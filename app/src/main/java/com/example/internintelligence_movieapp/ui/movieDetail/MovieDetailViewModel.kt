@@ -16,12 +16,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieDetailViewModel : ViewModel() {
+@HiltViewModel
+class MovieDetailViewModel @Inject constructor(
+    val firebaseFirestore: FirebaseFirestore,
+    val firebaseAuth: FirebaseAuth
+) : ViewModel() {
     private val repository = Repository()
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    //private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    //private val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
     private val _movieDetails = MutableLiveData<Movie?>()

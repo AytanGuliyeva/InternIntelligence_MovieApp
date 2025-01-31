@@ -22,15 +22,19 @@ import com.example.internintelligence_movieapp.ui.search.SearchViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MovieDetailFragment : Fragment() {
     private lateinit var binding: FragmentMovieDetailBinding
     val args: MovieDetailFragmentArgs by navArgs()
     val viewModel: MovieDetailViewModel by viewModels()
-    lateinit var auth: FirebaseAuth
+    //lateinit var auth: FirebaseAuth
     private var videoUrl: String? = null
     private lateinit var reviewAdapter: ReviewsAdapter
+    @Inject
+    lateinit var auth: FirebaseAuth
 
 
     override fun onCreateView(

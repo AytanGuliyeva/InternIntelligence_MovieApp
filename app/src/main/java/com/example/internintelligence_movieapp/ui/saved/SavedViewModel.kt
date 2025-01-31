@@ -10,14 +10,20 @@ import com.example.internintelligence_movieapp.retrofit.Repository
 import com.example.internintelligence_movieapp.retrofit.model.Movie
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SavedViewModel : ViewModel() {
+@HiltViewModel
+class SavedViewModel @Inject constructor(
+    val firestore: FirebaseFirestore,
+    val auth: FirebaseAuth
+) : ViewModel() {
     private val repository = Repository()
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+//    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+//    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val _movieResult = MutableLiveData<Resource<List<Movie>>>()
     val movieResult: LiveData<Resource<List<Movie>>> = _movieResult
